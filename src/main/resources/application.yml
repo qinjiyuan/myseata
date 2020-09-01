@@ -1,0 +1,53 @@
+application:
+  name: microservice
+  code: 20110
+
+server:
+  port: 20110
+
+eureka:
+  client:
+    enabled: true
+    serviceUrl:
+      defaultZone: http://47.99.198.56:8761/eureka
+    register-with-eureka: true
+
+spring:
+  application:
+    name: microservice
+    code: 20110
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://47.99.198.56:3306/my_seata?useSSL=false&zeroDateTimeBehavior=convertToNull&autoReconnect=true&characterEncoding=UTF-8&characterSetResults=UTF-8&allowMultiQueries=true
+    username: root
+    password: Radiant123
+    tomcat:
+      max-active: 5
+      initial-size: 5
+
+mybatis-plus:
+  mapper-locations: classpath*:com.mixedinfos.myseata.globaltrasictional.mapper/*.xml
+  type-aliases-package: com.mixedinfos.myseata.globaltrasictional
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+swagger:
+  base-package: com.mixedinfos.myseata.globaltrasictional
+  enabled: true
+
+# Seata 配置项，对应 SeataProperties 类
+seata:
+  application-id: ${spring.application.name} # Seata 应用编号，默认为 ${spring.application.name}
+  tx-service-group: ${spring.application.name}-group # Seata 事务组编号，用于 TC 集群名
+  # 服务配置项，对应 ServiceProperties 类
+  service:
+    # 虚拟组和分组的映射
+    vgroup-mapping:
+      multi-datasource-service-group: default
+    # 分组和 Seata 服务的映射
+    grouplist:
+      default: 47.99.198.56:8091
